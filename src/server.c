@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/03 14:07:21 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/03 14:48:30 by mabril           ###   ########.fr       */
+/*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
+/*   Updated: 2024/11/03 14:48:54 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "../inc/minitalk.h"
 
-# include "../lib/libft/libft.h"
-# include <stdio.h>
-# include <stdlib.h>
-
-#endif
+int	main(void)
+{
+	while (1)
+	{
+		printf("hola soy maicol\n");
+	}
+	return (0);
+}

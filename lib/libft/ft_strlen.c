@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/03 14:07:21 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/03 14:48:30 by mabril           ###   ########.fr       */
+/*   Created: 2024/02/13 09:22:57 by mabril            #+#    #+#             */
+/*   Updated: 2024/03/05 20:30:31 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include "../lib/libft/libft.h"
-# include <stdio.h>
-# include <stdlib.h>
+size_t	ft_strlen(const char	*s)
+{
+	size_t	i;
 
-#endif
+	i = 0;
+	while (s[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}

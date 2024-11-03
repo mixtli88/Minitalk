@@ -1,20 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_strtolowel.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/03 14:07:21 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/03 14:48:30 by mabril           ###   ########.fr       */
+/*   Created: 2024/07/08 19:50:31 by mabril            #+#    #+#             */
+/*   Updated: 2024/08/23 12:17:23 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include "../lib/libft/libft.h"
-# include <stdio.h>
-# include <stdlib.h>
+char	*ft_strtolowel(char *str)
+{
+	int	i;
 
-#endif
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] = str[i] + 32;
+		i++;
+	}
+	return (str);
+}

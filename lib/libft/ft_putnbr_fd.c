@@ -1,20 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/03 14:07:21 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/03 14:48:30 by mabril           ###   ########.fr       */
+/*   Created: 2024/02/27 10:36:53 by mabril            #+#    #+#             */
+/*   Updated: 2024/03/15 18:18:18 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include "../lib/libft/libft.h"
-# include <stdio.h>
-# include <stdlib.h>
+void	ft_putnbr_fd(int n, int fd)
+{
+	size_t	i;
+	long	nb;
 
-#endif
+	nb = n;
+	i = 0;
+	if (nb < 0)
+	{
+		write(fd, "-", 1);
+		nb = -nb;
+	}
+	if (nb > 9)
+		ft_putnbr_fd(nb / 10, fd);
+	i = (nb % 10) + '0';
+	write(fd, &i, 1);
+}

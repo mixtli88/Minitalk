@@ -56,10 +56,10 @@ create_files_and_dirs()
     mkdir test
 	touch Makefile
 
-    touch src/{main.c}
-    touch src/{utils.c}
-    touch src/{utils.cc}
-    touch src/{init.c}
+    touch src/main.c
+    touch src/utils.c
+    touch src/utils.cc
+    touch src/init.c
     touch inc/minitalk.h
 }
 
