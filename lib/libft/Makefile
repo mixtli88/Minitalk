@@ -6,12 +6,21 @@
 #    By: mabril <mabril@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/11 18:08:28 by mabril            #+#    #+#              #
-#    Updated: 2024/07/08 19:52:12 by mabril           ###   ########.fr        #
+#    Updated: 2024/11/04 19:57:08 by mabril           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = libft.a
+
+GREEN = \033[32m
+RED = \033[31m
+YELLOW = \033[33m
+BLUE = \033[34m
+MAGENTA = \033[35m
+CYAN = \033[36m
+WHITE = \033[37m
+RESET = \033[0m
 
 RM = rm -f
 SRC = 	ft_atoi.c		\
@@ -59,7 +68,8 @@ all: $(NAME)
 	
 $(NAME): $(OBJ)
 	@$(RM) $@
-	ar rcs $@ $(OBJ)
+	@ar rcs $@ $(OBJ)
+	@echo "📚 ${MAGENTA}Librerie successfully created. 🌐${DEFAULT}"
 
 clean:
 	$(RM) $(OBJ)
