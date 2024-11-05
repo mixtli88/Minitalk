@@ -6,7 +6,7 @@
 #    By: mabril <mabril@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/01 13:34:23 by mabril            #+#    #+#              #
-#    Updated: 2024/11/04 19:54:10 by mabril           ###   ########.fr        #
+#    Updated: 2024/11/05 09:46:44 by mabril           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,56 +22,54 @@ CYAN = \033[36m
 WHITE = \033[37m
 RESET = \033[0m
 
-
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
+
 BINDIR = bin
 SRCDIR = src
 LIBFT_DIR = lib/libft
 
-SRCS = $(addprefix $(SRCDIR)/, client.c server.c)
-OBJS = $(patsubst $(SRCDIR)/%.c, $(BINDIR)/%.o, $(SRCS))
-
-# Headers
 HEADERS = inc/push_swap.h
 
-# Ensure libft is compiled first
-all: libft $(NAME_CLIENT) $(NAME_SERVER)
+SRC_S = $(addprefix $(SRCDIR)/, server.c)
+SRC_C = $(addprefix $(SRCDIR)/, client.c )
+OBJ_S = $(patsubst $(SRCDIR)/%.c, $(BINDIR)/%.o, $(SRC_S))
+OBJ_C = $(patsubst $(SRCDIR)/%.c, $(BINDIR)/%.o, $(SRC_C))
 
-libft:
-	@make -C $(LIBFT_DIR)
-
-# Rule for creating .o files in the bin directory
 $(BINDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(BINDIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "🔨$(CYAN) Compiled $@ $(DEFAULT)"
 
-# Link client and server executables
-$(NAME_CLIENT): $(OBJS)
-	@$(CC) $(CFLAGS) $(BINDIR)/client.o -o $@ -L$(LIBFT_DIR) -lft
-	@echo "✅${GREEN} ${NAME_CLIENT} successfully created. 🌐${DEFAULT}"
+all: libft $(NAME_CLIENT) $(NAME_SERVER)
 
-$(NAME_SERVER): $(OBJS)
-	@$(CC) $(CFLAGS) $(BINDIR)/server.o -o $@ -L$(LIBFT_DIR) -lft
-	@echo "✅${GREEN} ${NAME_SERVER} Server successfully created. 🌐${DEFAULT}"
+libft:
+	@make -C $(LIBFT_DIR)
+	
+client: $(OBJ_C)
+	@$(CC) $(CFLAGS) $(OBJ_C) -o $@ -L$(LIBFT_DIR) -lft
+	@echo "✅${GREEN} ${NAME_CLIENT} successfully created. 🌐${RESET}"
+
+server: $(OBJ_S)
+	@$(CC) $(CFLAGS) $(OBJ_S) -o $@ -L$(LIBFT_DIR) -lft
+	@echo "✅${GREEN} ${NAME_SERVER} Server successfully created. 🌐${RESET}\n"
 
 clean:
 	@rm -rf $(BINDIR)
-	@echo "🧹 ${YELLOW} Binary files successfully removed 🗑${DEFAULT}"
+	@echo "\n🧹 ${YELLOW} Binary files successfully removed 🗑${RESET}"
 
 fclean: clean
 	@rm -f $(NAME_CLIENT) $(NAME_SERVER)
 	@make fclean -C $(LIBFT_DIR)
-	@echo "🗑️  ${RED} Executables successfully removed 🗑${DEFAULT}"
+	@echo "🧹  ${RED} Executables successfully removed 🗑${RESET}\n"
 
 re: fclean all
 
-# Debug rule to print variable values
 debug:
-	@echo "SRCS: $(SRCS)"
-	@echo "OBJS: $(OBJS)"
-	@echo "Current directory: $(shell pwd)"
-	@ls -la $(SRCDIR)
+	@echo "SRC_S: $(SRC_S)"
+	@echo "SRC_C: $(SRC_C)"
+	@echo "OBJ_S: $(OBJ_S)"
+	@echo "OBJ_C: $(OBJ_C)"
+	@echo "Current directory: $(shell pwd)\n"
 
 .PHONY: all clean fclean re libft debug

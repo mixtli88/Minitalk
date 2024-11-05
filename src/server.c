@@ -6,17 +6,24 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/04 19:57:24 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/05 12:16:41 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minitalk.h"
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	while (1)
+	if(ac != 1 && av)
 	{
-		printf("marica\n");
+		printf("error\n");
+	}
+	else
+	{
+		while (1)
+		{
+			printf("marica\n");
+		}	
 	}
 	return (0);
 }

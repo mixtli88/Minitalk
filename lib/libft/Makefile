@@ -6,7 +6,7 @@
 #    By: mabril <mabril@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/11 18:08:28 by mabril            #+#    #+#              #
-#    Updated: 2024/11/04 19:57:08 by mabril           ###   ########.fr        #
+#    Updated: 2024/11/05 09:46:38 by mabril           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,12 +69,13 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@$(RM) $@
 	@ar rcs $@ $(OBJ)
-	@echo "📚 ${MAGENTA}Librerie successfully created. 🌐${DEFAULT}"
+	@echo "\n📚 ${MAGENTA}Librerie successfully created. 🌐${RESET}"
 
 clean:
-	$(RM) $(OBJ)
+	@$(RM) $(OBJ)
+	@echo "🧹 ${YELLOW} Binary files librerie successfully removed 🗑${RESET}"
 
 fclean: clean
-	$(RM) $(NAME)
-
+	@$(RM) $(NAME)
+	@echo "🧹  ${RED} Librerie successfully removed 🗑${RESET}"
 re: fclean all
