@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/05 14:10:15 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/05 19:14:18 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,15 @@ int	main(int ac, char **av)
 		while (av[2][i])
 		{
 			ft_send_bit(pid, av[2][i]);
-			printf("chupamelo\n");
 			i++;
 		}	
+		ft_send_bit(pid, '\n');
+	}
+	else
+	{
+		printf("\033[91mError: wrong format.\033[0m\n");
+		printf("\033[33mTry: ./client <PID> <MESSAGE>\033[0m\n");
+		return (1);
 	}
 	return (0);
 }
