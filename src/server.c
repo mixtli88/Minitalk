@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/05 19:27:19 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/06 20:41:03 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 void ft_handler(int sig)
 {
 	static int bit;
-	static int i;
+	static int char_bin;
 
 	if (sig == SIGUSR1)
-		i |= (0x01 << bit);
+		char_bin |= (0x01 << bit);
 	bit++;
 	if (bit == 8)
 	{
-		printf("%c", i);
+		printf("%c", char_bin);
 		bit = 0;
-		i = 0;
+		char_bin = 0;
 	}
 }
 int	main(int ac, char **av)

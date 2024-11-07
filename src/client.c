@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/05 19:14:18 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/06 20:47:29 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@ void ft_send_bit(int pid, char c)
 	bit =0;
 	while(bit < 8)
 	{
+		
 		if((c & (1 << bit)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(10);
 		bit++;	
 	}
+	// printf(" c = %c\n", c);
 }
 
 int	main(int ac, char **av)
