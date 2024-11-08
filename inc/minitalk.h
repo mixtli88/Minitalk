@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:07:21 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/05 19:16:46 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/07 18:41:41 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINITALK_H
 
 # include "../lib/libft/libft.h"
+# include "../lib/ft_printf/ft_printf.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>

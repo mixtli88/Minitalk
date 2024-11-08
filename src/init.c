@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:19:26 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/05 12:50:45 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/07 20:26:49 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
         char process_name[PROC_PIDPATHINFO_MAXSIZE];
         if (proc_pidpath(pid_list[i], process_name, sizeof(process_name)) > 0) {
             if (strstr(process_name, argv[1])) {
-                printf("Found process '%s' with PID %d\n", argv[1], pid_list[i]);
+                ft_printf("Found process '%s' with PID %d\n", argv[1], pid_list[i]);
                 free(pid_list);
                 return 0;
             }
@@ -49,6 +49,6 @@ int main(int argc, char *argv[]) {
     }
 
     free(pid_list);
-    printf("Failed to find process '%s'\n", argv[1]);
+    ft_printf("Failed to find process '%s'\n", argv[1]);
     return 1;
 }

@@ -6,7 +6,7 @@
 #    By: mabril <mabril@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/01 13:34:23 by mabril            #+#    #+#              #
-#    Updated: 2024/11/05 09:46:44 by mabril           ###   ########.fr        #
+#    Updated: 2024/11/07 18:47:25 by mabril           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ CFLAGS = -Wall -Wextra -Werror
 BINDIR = bin
 SRCDIR = src
 LIBFT_DIR = lib/libft
+LIB_PRINT = lib/ft_printf
 
 HEADERS = inc/push_swap.h
 
@@ -45,13 +46,14 @@ all: libft $(NAME_CLIENT) $(NAME_SERVER)
 
 libft:
 	@make -C $(LIBFT_DIR)
+	@make -C $(LIB_PRINT)
 	
 client: $(OBJ_C)
-	@$(CC) $(CFLAGS) $(OBJ_C) -o $@ -L$(LIBFT_DIR) -lft
+	@$(CC) $(CFLAGS) $(OBJ_C) -o $@ -L$(LIBFT_DIR) -lft -L$(LIB_PRINT) -lftprintf
 	@echo "✅${GREEN} ${NAME_CLIENT} successfully created. 🌐${RESET}"
 
 server: $(OBJ_S)
-	@$(CC) $(CFLAGS) $(OBJ_S) -o $@ -L$(LIBFT_DIR) -lft
+	@$(CC) $(CFLAGS) $(OBJ_S) -o $@ -L$(LIBFT_DIR) -lft -L$(LIB_PRINT) -lftprintf
 	@echo "✅${GREEN} ${NAME_SERVER} Server successfully created. 🌐${RESET}\n"
 
 clean:
@@ -60,7 +62,8 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME_CLIENT) $(NAME_SERVER)
-	@make fclean -C $(LIBFT_DIR)
+	@make fclean -C $(LIBFT_DIR) 
+	@make fclean -C $(LIB_PRINT)
 	@echo "🧹  ${RED} Executables successfully removed 🗑${RESET}\n"
 
 re: fclean all
