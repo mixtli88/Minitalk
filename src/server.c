@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mike <mike@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/11 00:07:31 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/11 02:17:46 by mike             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_client_pid(int sig)
 	int tem;
 	
 	tem =0;
-	// ft_printf("sig %d = ", sig);
+	// ft_printf("bit %d = %d  ", bit, num);
 	if (sig == SIGUSR1)
 	{
 		// ft_printf("bit %d = 1\n", bit);
@@ -80,10 +80,10 @@ char	*ft_handler_size(int sig)
 	bit++;
 	if (bit == 32)
 	{
-		ft_printf("len = %d \n", num);
+		// ft_printf("len = %d \n", num);
 
 		str = new_str(num);
-		ft_printf("str en size = %s \n", str);
+		// ft_printf("str en size = %s \n", str);
 	 	g_state = 2;
 		bit = 0;
 		num = 0;
@@ -92,7 +92,7 @@ char	*ft_handler_size(int sig)
 	return (str);
 }
 
-void	*ft_handler_char(int sig, char *str)
+char	*ft_handler_char(int sig, char *str)
 {
 	static int	bit;
 	static int	c;
@@ -103,21 +103,30 @@ void	*ft_handler_char(int sig, char *str)
 	// ft_printf("bit = %d ", bit);
 	if (sig == SIGUSR1)
 	{
-		ft_printf("bit %d = 1\n", bit);
+		// ft_printf("bit %d = 1\n", bit);
 		c |= (0x01 << bit);
 	}
-	else
-		ft_printf("bit %d = 0\n", bit);
+	// else
+		// ft_printf("bit %d = 0\n", bit);
 	bit++;
 	if (bit == 8)
 	{
-		str[i] = c;
-		ft_printf("str[i] = %c \n", str[i]);
+		str[i++] = c;
+		
+		// ft_printf("i = %d \n", i);
+		// ft_printf("str[0] = %c \n", str[i]);
+		// ft_printf("str[1] = %c \n", str[i]);
+		// ft_printf("str[2] = %c \n", str[i]);
+		// ft_printf("str[3] = %c \n", str[i]);
+		// ft_printf("str[4] = %c \n", str[i]);
+		// ft_printf("str[5] = %c \n", str[i]);
+		// ft_printf("str[6] = %c \n", str[i]);
 		if (c == '\0')
 		{
 			
-			ft_printf("estamos entrano b- 0");
+			// ft_printf("estamos entrano b- 0\n");
 			ft_printf("%s", str);
+			ft_printf("%c", '\n');
 			free(str);
 			str = NULL;
 		 	g_state = 0;
@@ -170,7 +179,7 @@ void	ft_handler(int sig)
 		c_pid = ft_client_pid(sig);
 		
 		// len = ft_strlen(str);
-		ft_printf("c_pid = %d  \n", c_pid);
+		// ft_printf("c_pid = %d  \n", c_pid);
 		// ft_printf("len hande = %d  \n", len);
 	}
 	else if  (g_state == 1)
@@ -210,4 +219,4 @@ int	main(int ac, char **av)
 	return (0);
 }
 
-// addssdsfsdfsdfsfdsdsfdsfdsfsfsdfsdfsdfdsfdsfsdfdsfsfsdfdsfsfdsssdfsdfsdfdsfsdsdtequieroasdfsdffasdfasdfasdfasdfasdfasdfasdfdsafa sdfasdfasdfasdfasdfsadfsadfasfasdfasdfasdfasdfasdfasdfasdfasdfsdfasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfaasdfssdfdsfsfsdffsdsfsdffsfdfsdsfdsdfsdsfsfdsfsdfsdfsdffsfjsdhfksjdhjkfshkfhsdfhksdfhdskjfhsjkfhsjkfhsdjkfhdjkhfjkdshfjksdhfjdksfhdjkshfkdjshfjkdhskjfhdskjfhkjsdhfjkshkjdhfjkshfkjshfkjsdhfjsdhfdksdhjkhfkjsdhfjkdshfjshdfkjdshfkjdshfjkdshfjksdhfkjdsfhsdjkfhdsjkfhuwehriuhriuwehiuewhuiheuifheiuhferuygheurhfeuifhdsuifhfjaksjdfjksagfhkeuyfghjbdkaefwygfiekywgfhjdsabfhjcbbhruewhruewbckfjbdjkhakufgdasufhkudcbkyasbuehuyegwuifhejkacgsfkjagjdscgfuyfwiuygwqeoegieygyrglkuewrowqgeyobweyucreqwgrcoborewbugruiebcrgwqobecruigewbioructiuweryoceiruwcbowequbcoiuwebcroybcuiwqeyriucbhdfkfjefhiuheiufwehiruewhriuyqruiwyrxonuyeriuonqerxgerofguihnuiehwiuhdiuewhddisuhflusdkhafuihkjsldajfljdsakjflkjasdlkfjsakldjfklsdjfklsdjfdlksjfdkslafjklsdjfklsjfsakljfdklsajlfjioewjriowrhqweiorhiudfhiudayfduiashufidafhouiqhweiurghufdshaflashiuqguiyegfoiuhsdoafhiugdyudshfuisdahuisadhfuiahfiufbyeubcuffsdfadsfasdfasdfasdfsdfasdfsdafasdfadshjkasdfhgjsadfgksajdgfhjsgdhjfgsahjdfghjsagjhfkashdfgkasghdjfhgksadgfjhshagdfdsafasdfsdfsdfdsfdsfdsfsdafdfdsfsdfsfdsfdsfsdffewrwerwertettyrtyrtyrtyrtyryrtytrytreryeyttttttttttttttttertyertyertyertyertytryrtryeyyyyyysalsa
+// addssdsfsdfsdfsfdsdsfdsfdsfsfsdfsdfsdfdsfdsfsdfdsfsfsdfdsfsfdsssdfsdfsdfdsfsdsdtequieroasdfsdffasdfasdfasdfasdfasdfasdfasdfdsafasdfasdfasdfasdfasdfsadfsadfasfasdfasdfasdfasdfasdfasdfasdfasdfsdfasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfaasdfssdfdsfsfsdffsdsfsdffsfdfsdsfdsdfsdsfsfdsfsdfsdfsdffsfjsdhfksjdhjkfshkfhsdfhksdfhdskjfhsjkfhsjkfhsdjkfhdjkhfjkdshfjksdhfjdksfhdjkshfkdjshfjkdhskjfhdskjfhkjsdhfjkshkjdhfjkshfkjshfkjsdhfjsdhfdksdhjkhfkjsdhfjkdshfjshdfkjdshfkjdshfjkdshfjksdhfkjdsfhsdjkfhdsjkfhuwehriuhriuwehiuewhuiheuifheiuhferuygheurhfeuifhdsuifhfjaksjdfjksagfhkeuyfghjbdkaefwygfiekywgfhjdsabfhjcbbhruewhruewbckfjbdjkhakufgdasufhkudcbkyasbuehuyegwuifhejkacgsfkjagjdscgfuyfwiuygwqeoegieygyrglkuewrowqgeyobweyucreqwgrcoborewbugruiebcrgwqobecruigewbioructiuweryoceiruwcbowequbcoiuwebcroybcuiwqeyriucbhdfkfjefhiuheiufwehiruewhriuyqruiwyrxonuyeriuonqerxgerofguihnuiehwiuhdiuewhddisuhflusdkhafuihkjsldajfljdsakjflkjasdlkfjsakldjfklsdjfklsdjfdlksjfdkslafjklsdjfklsjfsakljfdklsajlfjioewjriowrhqweiorhiudfhiudayfduiashufidafhouiqhweiurghufdshaflashiuqguiyegfoiuhsdoafhiugdyudshfuisdahuisadhfuiahfiufbyeubcuffsdfadsfasdfasdfasdfsdfasdfsdafasdfadshjkasdfhgjsadfgksajdgfhjsgdhjfgsahjdfghjsagjhfkashdfgkasghdjfhgksadgfjhshagdfdsafasdfsdfsdfdsfdsfdsfsdafdfdsfsdfsfdsfdsfsdffewrwerwertettyrtyrtyrtyrtyryrtytrytreryeyttttttttttttttttertyertyertyertyertytryrtryeyyyyyysalsa
