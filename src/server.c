@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/11 21:04:52 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/11 21:12:41 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,21 +172,21 @@ void	ft_handler(int sig)
 		    kill(c_pid, SIGUSR1);
 		
 		
-		while  (g_state ==2) 
-        {
+		while (g_state == 2) 
+   		{
+			usleep(100); 
+			time_whait += 100;  // Sumar el tiempo real que esperamos
 			
-            usleep(100); 
-            time_whait += 50000;
-            
-            if (time_whait >= 2000000) 
-            {
-                str = ft_handler_char(2, str, 1);
+			if (time_whait >= 2000000)  // 2 segundos
+			{
+				ft_printf("Timeout - Mensaje recibido: %s\n", str);
+				str = ft_handler_char(2, str, 1);
+				if (c_pid)
+					kill(c_pid, SIGUSR2); 
 				g_state = 0;
 				c_pid = 0;
-				if (c_pid)
-		 			kill(c_pid, SIGUSR2); 
-                break;
-            }
+			break;
+			}
 		}
 	}
 	// if (c_pid)
