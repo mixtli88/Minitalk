@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mike <mike@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/11 05:50:46 by mike             ###   ########.fr       */
+/*   Updated: 2024/11/11 21:04:52 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_client_pid(int sig)
 	int tem;
 	
 	tem =0;
-	// ft_printf("bit %d = %d  ", bit, num);
+	// ft_printf("bit %d = %d  \n", bit, num);
 	if (sig == SIGUSR1)
 	{
 		// ft_printf("bit %d = 1\n", bit);
@@ -52,13 +52,14 @@ int	ft_client_pid(int sig)
 	if (bit == 32)
 	{
 		// ft_printf("entra num \n");
-		ft_printf("c pid  = %d \n", num);
+		// ft_printf("c pid  = %d \n\n\n", num);
 		tem = num;
 		num = 0;
 		bit = 0;
 		g_state = 1;
 		return (tem);
 	}
+	usleep(100);
 	return (num);
 }
 char	*ft_handler_size(int sig)
@@ -79,10 +80,10 @@ char	*ft_handler_size(int sig)
 	bit++;
 	if (bit == 32)
 	{
-		ft_printf("len = %d \n", num);
+		// ft_printf("len = %d \n", num);
 
 		str = new_str(num);
-		ft_printf("str en size = %s \n", str);
+		// ft_printf("str en size = %s \n\n\n", str);
 	 	g_state = 2;
 		bit = 0;
 		num = 0;
@@ -97,35 +98,36 @@ char	*ft_handler_char(int sig, char *str, int check)
 	static int	c;
 	static int	i;
 	
+	
 	if(check == 1)
 		c = '\0';
-	ft_printf("str en hand char = %s \n", str);
-	ft_printf("sig = %d ", sig);
-	ft_printf("bit = %d ", bit);
+	// ft_printf("str en hand char = %s \n", str);
+	// ft_printf("sig = %d ", sig);
+	// ft_printf("bit = %d ", bit);
 
 	if (sig == SIGUSR1)
 	{
-		ft_printf("bit %d = 1\n", bit);
+		// ft_printf("bit %d = 1\n", bit);
 		c |= (0x01 << bit);
 	}
-	else
-		ft_printf("bit %d = 0\n", bit);
+	// else
+		// ft_printf("bit %d = 0\n", bit);
 	bit++;
 	if (bit == 8 || check == 1)
 	{
 		str[i++] = c;
 		
-		ft_printf("i = %d \n", i);
-		ft_printf("str[0] = %c \n", str[i]);
-		ft_printf("str[1] = %c \n", str[i]);
-		ft_printf("str[2] = %c \n", str[i]);
-		ft_printf("str[3] = %c \n", str[i]);
-		ft_printf("str[4] = %c \n", str[i]);
-		ft_printf("str[5] = %c \n", str[i]);
-		ft_printf("str[6] = %c \n", str[i]);
+		// ft_printf("i = %d \n", i);
+		// ft_printf("str[0] = %c \n", str[i]);
+		// ft_printf("str[1] = %c \n", str[i]);
+		// ft_printf("str[2] = %c \n", str[i]);
+		// ft_printf("str[3] = %c \n", str[i]);
+		// ft_printf("str[4] = %c \n", str[i]);
+		// ft_printf("str[5] = %c \n", str[i]);
+		// ft_printf("str[6] = %c \n", str[i]);
 		if (c == '\0')
 		{
-			ft_printf("estamos entrano b- 0\n");
+			// ft_printf("estamos entrano b- 0\n");
 			ft_printf("%s\n", str);
 			free(str);
 			str = NULL;
@@ -150,31 +152,39 @@ void	ft_handler(int sig)
 	if  (g_state == 0)
 	{
 		c_pid = ft_client_pid(sig);
-		if (c_pid)
-        kill(c_pid, SIGUSR1);
-	// ft_printf("c_pid %d\n", c_pid);
+		// if (c_pid)
+        // 	kill(c_pid, SIGUSR1);
+		
 	}
 	else if  (g_state == 1)
 	{
 		str = ft_handler_size(sig);
+		usleep(100);
 		if (c_pid)
-        kill(c_pid, SIGUSR1);
+		   	kill(c_pid, SIGUSR1);
 	}
 	else if (g_state == 2)
 	{
 		str = ft_handler_char(sig, str, 0);
+		
+		usleep(100);
 		if (c_pid)
-        kill(c_pid, SIGUSR1);
-		while (time_whait < 5000000) // 2 segundos en microsegundos
+		    kill(c_pid, SIGUSR1);
+		
+		
+		while  (g_state ==2) 
         {
-			ft_printf("entro al whait\n", str);
-            usleep(2000000); // Esperar 50ms (ajustable)
+			
+            usleep(100); 
             time_whait += 50000;
             
-            if (time_whait >= 2000000) // Se alcanzaron los 2 segundos
+            if (time_whait >= 2000000) 
             {
-                str = ft_handler_char(2, str, 1); // Restablecer el manejador
-                kill(c_pid, SIGUSR2); // Opcional: notificar al cliente sobre el tiempo de espera
+                str = ft_handler_char(2, str, 1);
+				g_state = 0;
+				c_pid = 0;
+				if (c_pid)
+		 			kill(c_pid, SIGUSR2); 
                 break;
             }
 		}

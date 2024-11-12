@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mike <mike@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/11 04:27:57 by mike             ###   ########.fr       */
+/*   Updated: 2024/11/11 20:01:51 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@ static int s_received = 0;
 void confirm_handle(int sig)
 {
 	if(sig == SIGUSR1)
-		s_received = 1;
-	if(sig == SIGUSR2)
 	{
-		ft_printf("Mensage no complete");
+		
+		// ft_printf("signal confirme\n");
+		s_received = 1;
+	}
+	else if(sig == SIGUSR2)
+	{
+		// ft_printf("Mensage not complete\n");
 		exit(1);
 	}
 }
@@ -33,10 +37,16 @@ void ft_send_bits_no_conf(int pid, unsigned int num, int bits)
     while (bit < bits)
     {
         if ((num & (1 << bit)))
+		{
+			// ft_printf("bit %d = 1\n", bit);	
             kill(pid, SIGUSR1);
+		}
         else
+		{
+			// ft_printf("bit %d = 0\n", bit);
             kill(pid, SIGUSR2);
-        usleep(1000);
+		}
+        usleep(100);
         bit++;
     }
 }
@@ -44,10 +54,11 @@ void ft_send_bits_no_conf(int pid, unsigned int num, int bits)
 void	ft_send_bits(int s_pid, unsigned int num, int bits)
 {
 	int	i;
-	// int b;
+	int b;
 	
-	// b = 1;
+	b = 1;
 	i = 0;
+	
 	while (i < bits)
 	{
 		s_received = 0;
@@ -62,11 +73,14 @@ void	ft_send_bits(int s_pid, unsigned int num, int bits)
 			// ft_printf("bit %d - %d = 0\n", i,b);
 			
 		}
-		// b= b*2;
+		b= b*2;
 		while(!s_received)
 			usleep(100);
 		i++;
 	}
+	// ft_printf(" Message arrive\n");
+
+	
 	// if(s)
 	// ft_printf(" c = %c\n", c);
 }
@@ -78,10 +92,12 @@ void	ft_send_str(int s_pid, char *str, int len)
     i = 0;
     while (i < len)
     {
+		// ft_printf(" str[%d] = %c\n",i, str[i]);
         ft_send_bits(s_pid, str[i], 8);  // Enviamos 8 bits por carácter
         i++;
     }
 	ft_send_bits(s_pid, '\0', 8);
+	// ft_printf(" Message arrive\n");
 }
 // void	ft_send_str(int pid, char *str, int len)
 // {
@@ -128,12 +144,12 @@ int	main(int ac, char **av)
 	}
 	signal(SIGUSR1, confirm_handle);
 	client_pid = getpid();
-	ft_printf("c_pid %d \n", client_pid);
 	server_pid = ft_atoi(av[1]);
 	len = ft_strlen(av[2]);
-	ft_printf("len %d \n", len);
 	ft_send_bits_no_conf(server_pid, client_pid, 32);
+	// ft_printf("c_pid %d \n\n\n", client_pid);
 	ft_send_bits(server_pid, len, 32);
+	// ft_printf("len %d \n\n\n", len);
 	ft_send_str(server_pid, av[2], len);
 	
 	ft_printf(" Message arrive\n");
