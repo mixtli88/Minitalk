@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/11 21:14:35 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/11 21:28:59 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void confirm_handle(int sig)
 	else if(sig == SIGUSR2)
 	{
 		// ft_printf("Mensage not complete\n");
-		exit(0);
+		exit(1);
 	}
 }
 

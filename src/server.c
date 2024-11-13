@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/11 21:12:41 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/12 19:45:27 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,10 +145,12 @@ void	ft_handler(int sig)
 	static char	*str;
 	static unsigned c_pid;
 	// int check;
-	int time_whait;
 	
-	time_whait =0 ;
 	// check = 0;
+	if (sig ==  3)
+	{
+		
+	}
 	if  (g_state == 0)
 	{
 		c_pid = ft_client_pid(sig);
@@ -166,29 +168,14 @@ void	ft_handler(int sig)
 	else if (g_state == 2)
 	{
 		str = ft_handler_char(sig, str, 0);
-		
 		usleep(100);
 		if (c_pid)
 		    kill(c_pid, SIGUSR1);
+		ft_printf("Estado actual: g_state = %d, c_pid = %d\n", g_state, c_pid);
+		ft_printf("Mensaje recibido hasta ahora: %s\n", str);
+		if (sig==3)
 		
-		
-		while (g_state == 2) 
-   		{
-			usleep(100); 
-			time_whait += 100;  // Sumar el tiempo real que esperamos
-			
-			if (time_whait >= 2000000)  // 2 segundos
-			{
-				ft_printf("Timeout - Mensaje recibido: %s\n", str);
-				str = ft_handler_char(2, str, 1);
-				if (c_pid)
-					kill(c_pid, SIGUSR2); 
-				g_state = 0;
-				c_pid = 0;
-			break;
-			}
-		}
-	}
+    }
 	// if (c_pid)
     //     kill(c_pid, SIGUSR1); 
 }
@@ -196,7 +183,8 @@ void	ft_handler(int sig)
 int	main(int ac, char **av)
 {
 	int	pid;
-
+	int time_whait;
+	
 	if (ac != 1 && av)
 	{
 		ft_printf(RED "error\n" RESET);
@@ -207,10 +195,21 @@ int	main(int ac, char **av)
 	signal(SIGUSR1, ft_handler);
 	signal(SIGUSR2, ft_handler);
 	while (1)
-	{		
-		pause();
+	{	
+		usleep(300);
+		while (g_state == 2) 
+    	{
+			usleep(100); 
+			time_whait += 100;
+			
+			if (time_whait >= 5000000)  // Aumentado a 5 segundos para debug
+			{
+				ft_printf("Timeout después de %d microsegundos\n", time_whait);
+				ft_handler(3);
+				break;
+			}
+		}
 	}
 	return (0);
 }
-
 // addssdsfsdfsdfsfdsdsfdsfdsfsfsdfsdfsdfdsfdsfsdfdsfsfsdfdsfsfdsssdfsdfsdfdsfsdsdtequieroasdfsdffasdfasdfasdfasdfasdfasdfasdfdsafasdfasdfasdfasdfasdfsadfsadfasfasdfasdfasdfasdfasdfasdfasdfasdfsdfasdfasdfasdfasdfasdfasdfasdfasdfsadfasdfasdfaasdfssdfdsfsfsdffsdsfsdffsfdfsdsfdsdfsdsfsfdsfsdfsdfsdffsfjsdhfksjdhjkfshkfhsdfhksdfhdskjfhsjkfhsjkfhsdjkfhdjkhfjkdshfjksdhfjdksfhdjkshfkdjshfjkdhskjfhdskjfhkjsdhfjkshkjdhfjkshfkjshfkjsdhfjsdhfdksdhjkhfkjsdhfjkdshfjshdfkjdshfkjdshfjkdshfjksdhfkjdsfhsdjkfhdsjkfhuwehriuhriuwehiuewhuiheuifheiuhferuygheurhfeuifhdsuifhfjaksjdfjksagfhkeuyfghjbdkaefwygfiekywgfhjdsabfhjcbbhruewhruewbckfjbdjkhakufgdasufhkudcbkyasbuehuyegwuifhejkacgsfkjagjdscgfuyfwiuygwqeoegieygyrglkuewrowqgeyobweyucreqwgrcoborewbugruiebcrgwqobecruigewbioructiuweryoceiruwcbowequbcoiuwebcroybcuiwqeyriucbhdfkfjefhiuheiufwehiruewhriuyqruiwyrxonuyeriuonqerxgerofguihnuiehwiuhdiuewhddisuhflusdkhafuihkjsldajfljdsakjflkjasdlkfjsakldjfklsdjfklsdjfdlksjfdkslafjklsdjfklsjfsakljfdklsajlfjioewjriowrhqweiorhiudfhiudayfduiashufidafhouiqhweiurghufdshaflashiuqguiyegfoiuhsdoafhiugdyudshfuisdahuisadhfuiahfiufbyeubcuffsdfadsfasdfasdfasdfsdfasdfsdafasdfadshjkasdfhgjsadfgksajdgfhjsgdhjfgsahjdfghjsagjhfkashdfgkasghdjfhgksadgfjhshagdfdsafasdfsdfsdfdsfdsfdsfsdafdfdsfsdfsfdsfdsfsdffewrwerwertettyrtyrtyrtyrtyryrtytrytreryeyttttttttttttttttertyertyertyertyertytryrtryeyyyyyysalsa
