@@ -6,11 +6,21 @@
 #    By: mabril <mabril@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/20 16:49:43 by mabril            #+#    #+#              #
-#    Updated: 2024/04/29 18:28:45 by mabril           ###   ########.fr        #
+#    Updated: 2024/11/13 21:23:22 by mabril           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
+
+GREEN = \033[32m
+RED = \033[31m
+YELLOW = \033[33m
+BLUE = \033[34m
+MAGENTA = \033[35m
+CYAN = \033[36m
+WHITE = \033[37m
+RESET = \033[0m
+
 SRCS = 	ft_p_memo.c	\
 		ft_printf.c \
 		ft_putchar.c \
@@ -26,16 +36,23 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-$(NAME) :	$(OBJS)
-	ar crs $(NAME) $(OBJS)
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@ -I.
 
-all :	$(NAME)
+$(NAME) :	$(OBJS)
+	@ar crs $(NAME) $(OBJS)
+	@echo "\n📚 ${MAGENTA}Librerie ft_printf successfully created. 🌐${RESET}"
+
+all :	
+	@$(NAME)
 
 clean :
-	$(RM) $(OBJS)
+	@$(RM) $(OBJS)
+	@echo "🧹 ${YELLOW} Binary files librerie ft_printf successfully removed 🗑${RESET}"
 
 fclean : clean 
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
+	@echo "🧹  ${RED} Librerie ft_printf successfully removed 🗑${RESET}"
 
 re : fclean all
 
