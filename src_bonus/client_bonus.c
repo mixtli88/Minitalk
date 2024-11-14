@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/13 23:19:28 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/13 23:25:10 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ static int	g_received = 0;
 void	confirm_handle(int sig)
 {
 	if (sig == SIGUSR1)
-	{
-		ft_printf(RED "🚫 senal recibida\n" RESET);
 		g_received = 1;
-	}
 	else if (sig == SIGUSR2)
 	{
 		ft_printf(RED "🚫 Mensage not complete\n" RESET);
@@ -39,7 +36,7 @@ void	ft_send_bits_no_conf(int pid, unsigned int num, int bits)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(300);
+		usleep(100);
 		bit++;
 	}
 }
@@ -54,19 +51,18 @@ void	ft_send_bits(int s_pid, unsigned int num, int bits)
 	while (i < bits)
 	{
 		g_received = 0;
-		usleep(500);
 		if ((num & (1 << i)))
 			kill(s_pid, SIGUSR1);
 		else
 			kill(s_pid, SIGUSR2);
 		while (!g_received)
 		{
-			usleep(500);
+			usleep(100);
 			while (g_received == 0)
 			{
 				usleep(100);
 				time_whait += 100;
-				if (time_whait >= 5000000)
+				if (time_whait >= 2000000)
 					ft_error(2);
 			}
 		}
