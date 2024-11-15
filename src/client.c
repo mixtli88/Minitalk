@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/14 23:36:32 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:40:21 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static int	g_received = 0;
 
 void	confirm_handle(int sig)
 {
+	static int g_received;
+	
 	if (sig == SIGUSR1)
 		g_received = 1;
 	else if (sig == SIGUSR2)
@@ -23,7 +25,7 @@ void	confirm_handle(int sig)
 }
 
 
-void	ft_send_bits_no_conf(int pid, unsigned int num, int bits)
+void	ft_send_bits_no_conf(int s_pid, unsigned int num, int bits)
 {
 	int	bit;
 
@@ -31,9 +33,9 @@ void	ft_send_bits_no_conf(int pid, unsigned int num, int bits)
 	while (bit < bits)
 	{
 		if ((num & (1 << bit)))
-			kill(pid, SIGUSR1);
+			kill(s_pid, SIGUSR1);
 		else
-			kill(pid, SIGUSR2);
+			kill(s_pid, SIGUSR2);
 		usleep(1000);
 		bit++;
 	}
@@ -70,9 +72,11 @@ void	ft_send_bits(int s_pid, unsigned int num, int bits)
 
 void	ft_send_str(int s_pid, char *str, int len)
 {
+	static int stock_pid;
 	int	i;
 
 	i = 0;
+	stock_pid =  s_pid;
 	while (i < len)
 	{
 		ft_send_bits(s_pid, str[i], 8);
@@ -80,7 +84,21 @@ void	ft_send_str(int s_pid, char *str, int len)
 	}
 	ft_send_bits(s_pid, '\0', 8);
 }
+void handle_sigint(int sig)
+{
+	static int s_pid;
 
+    (void)sig;
+	if (sig == g_received)
+		s_pid = sig;
+	printf("server_pid %d\n", s_pid);
+    if ( sig == SIGINT)
+    {
+        printf("pid dentro de sigint %d\n", s_pid);
+       	ft_send_bits(s_pid,65535,32);
+		exit(1); 
+    }  
+}
 int	main(int ac, char **av)
 {
 	int	server_pid;
@@ -90,10 +108,17 @@ int	main(int ac, char **av)
 	len = 0;
 	if (ac != 3)
 		ft_error(3);
-	signal(SIGUSR1, confirm_handle);
-	client_pid = getpid();
-	// printf("e3e3e%d\", client_pid);
+	client_pid = getpid();	
 	server_pid = ft_atoi(av[1]);
+	printf("g_received antes de sigint %d\n", g_received);
+	g_received = server_pid;
+	
+	handle_sigint(server_pid);
+	g_received = 0;
+	
+	signal(SIGUSR1, confirm_handle);
+	signal(SIGINT, handle_sigint);
+	// printf("e3e3e%d\", client_pid);
 	len = ft_strlen(av[2]);
 	ft_send_bits_no_conf(server_pid, client_pid, 32);
 	ft_send_bits(server_pid, len, 32);
