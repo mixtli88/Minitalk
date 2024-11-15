@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/13 22:11:36 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/14 23:36:32 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	confirm_handle(int sig)
 		exit(1);
 }
 
+
 void	ft_send_bits_no_conf(int pid, unsigned int num, int bits)
 {
 	int	bit;
@@ -33,7 +34,7 @@ void	ft_send_bits_no_conf(int pid, unsigned int num, int bits)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(1000);
 		bit++;
 	}
 }
@@ -54,10 +55,10 @@ void	ft_send_bits(int s_pid, unsigned int num, int bits)
 			kill(s_pid, SIGUSR2);
 		while (!g_received)
 		{
-			usleep(100);
+			usleep(1000);
 			while (g_received == 0)
 			{
-				usleep(100);
+				usleep(1000);
 				time_whait += 100;
 				if (time_whait >= 2000000)
 					ft_error(2);
@@ -91,6 +92,7 @@ int	main(int ac, char **av)
 		ft_error(3);
 	signal(SIGUSR1, confirm_handle);
 	client_pid = getpid();
+	// printf("e3e3e%d\", client_pid);
 	server_pid = ft_atoi(av[1]);
 	len = ft_strlen(av[2]);
 	ft_send_bits_no_conf(server_pid, client_pid, 32);
@@ -98,3 +100,26 @@ int	main(int ac, char **av)
 	ft_send_str(server_pid, av[2], len);
 	return (0);
 }
+
+// int	main(int ac, char **av)
+// {
+// 	int	server_pid;
+// 	int	len;
+// 	int	client_pid;
+
+// 	len = 0;
+// 	if (ac != 3)
+// 		ft_error(3);
+// 	signal(SIGUSR1, confirm_handle);
+// 	client_pid = getpid();
+// 	// printf("e3e3e%d\", client_pid);
+// 	server_pid = ft_atoi(av[1]);
+// 	len = ft_strlen(av[2]);
+// 	ft_send_bits_no_conf(server_pid, client_pid, 32);
+// 	ft_send_bits(server_pid, len, 32);
+// 	ft_send_str(server_pid, av[2], len);
+// 	return (0);
+// }
+
+
+

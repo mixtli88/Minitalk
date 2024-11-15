@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/13 23:25:25 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/14 11:40:57 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ int	ft_client_pid(int sig)
 	bit++;
 	if (bit == 32)
 	{
-		ft_printf("cantidad de bit de pid cliente ok\n");
+		// ft_printf("cantidad de bit de pid cliente ok\n");
 		tem = num;
 		num = 0;
 		bit = 0;
 		g_state = 1;
 		return (tem);
 	}
-	usleep(300);
+	usleep(100);
 	return (num);
 }
 
@@ -47,10 +47,10 @@ char	*ft_handler_size(int sig)
 	if (sig == SIGUSR1)
 		num |= (1u << bit);
 	bit++;
-	ft_printf("bit de len = %d\n", bit);
+	// ft_printf("bit de len = %d\n", bit);
 	if (bit == 32)
 	{
-		ft_printf("cantidad de bit de len cliente ok\n");
+		// ft_printf("cantidad de bit de len cliente ok\n");
 		str = new_str(num);
 		g_state = 2;
 		bit = 0;
@@ -99,7 +99,7 @@ void	ft_handler(int sig)
 	else if (g_state == 1)
 	{
 		str = ft_handler_size(sig);
-		usleep(200);
+		usleep(100);
 		if (c_pid)
 			kill(c_pid, SIGUSR1);
 	}
