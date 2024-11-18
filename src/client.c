@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mike <mike@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/15 17:40:21 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/17 22:01:18 by mike             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static int	g_received = 0;
 
 void	confirm_handle(int sig)
 {
-	static int g_received;
 	
 	if (sig == SIGUSR1)
 		g_received = 1;
@@ -72,16 +71,16 @@ void	ft_send_bits(int s_pid, unsigned int num, int bits)
 
 void	ft_send_str(int s_pid, char *str, int len)
 {
-	static int stock_pid;
 	int	i;
 
 	i = 0;
-	stock_pid =  s_pid;
 	while (i < len)
 	{
+		// ft_printf("i = %d\n", i);  
 		ft_send_bits(s_pid, str[i], 8);
 		i++;
 	}
+	// ft_printf("\uF464\n");
 	ft_send_bits(s_pid, '\0', 8);
 }
 void handle_sigint(int sig)
@@ -91,11 +90,10 @@ void handle_sigint(int sig)
     (void)sig;
 	if (sig == g_received)
 		s_pid = sig;
-	printf("server_pid %d\n", s_pid);
     if ( sig == SIGINT)
     {
-        printf("pid dentro de sigint %d\n", s_pid);
-       	ft_send_bits(s_pid,65535,32);
+		printf("server_pid %d\n", s_pid);
+       	ft_send_bits(s_pid, 65535, 32);
 		exit(1); 
     }  
 }
@@ -110,9 +108,7 @@ int	main(int ac, char **av)
 		ft_error(3);
 	client_pid = getpid();	
 	server_pid = ft_atoi(av[1]);
-	printf("g_received antes de sigint %d\n", g_received);
 	g_received = server_pid;
-	
 	handle_sigint(server_pid);
 	g_received = 0;
 	
@@ -120,6 +116,7 @@ int	main(int ac, char **av)
 	signal(SIGINT, handle_sigint);
 	// printf("e3e3e%d\", client_pid);
 	len = ft_strlen(av[2]);
+	printf("len = %d\n", len);
 	ft_send_bits_no_conf(server_pid, client_pid, 32);
 	ft_send_bits(server_pid, len, 32);
 	ft_send_str(server_pid, av[2], len);

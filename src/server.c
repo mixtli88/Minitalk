@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mike <mike@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/15 17:39:33 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/17 22:06:30 by mike             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,29 @@ char	*ft_handler_char(int sig, char *str)
 
 	if (sig == SIGUSR1)
 		c |= (0x01 << bit);
+	printf("sig %d\n", sig);
 	bit++;
-	// ft_printf("bit %d\n", bit);
 	if (bit == 8)
 	{
+		
 		str[i++] = c;
 		if (c == '\0' || c == 255)
 		{
 			if (c != 255)
-				ft_printf("%s\n", str);
+				ft_printf("----------------%s\n", str);
+			
 			free(str);
 			str = NULL;
 			g_state = 0;
 			i = 0;
+			printf("str %s\n", str);
+			printf("state %c\n", g_state);
+			printf("i %d\n", i);
 		}
+			printf("c %c\n", c);
 		bit = 0;
 		c = 0;	
+			printf("bit %d\n", bit);
 	}
 	return (str);
 }
@@ -104,10 +111,10 @@ void	ft_handler(int sig)
 	else if (g_state == 2)
 	{
 		str = ft_handler_char(sig, str);
-		if (g_state == 0)
-			c_pid = 0;
 		if (c_pid)
 			kill(c_pid, SIGUSR1);
+		if (g_state == 0)
+			c_pid = 0;
 	}
 }
 
@@ -122,9 +129,6 @@ int	main(int ac, char **av)
 	signal(SIGUSR1, ft_handler);
 	signal(SIGUSR2, ft_handler);
 	while (1)
-	{
-
 		pause();
-	}
 	return (0);
 }

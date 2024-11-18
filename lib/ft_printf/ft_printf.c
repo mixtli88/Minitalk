@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mike <mike@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:52:43 by mabril            #+#    #+#             */
-/*   Updated: 2024/05/03 11:23:36 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/17 21:27:45 by mike             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 static int	recurs(char c, va_list arg)
 {
 	int	count;
-	int	i;
 
-	i = 0;
 	count = 0;
 	if (c == 'c')
 		count += ft_putchar(va_arg(arg, int));
