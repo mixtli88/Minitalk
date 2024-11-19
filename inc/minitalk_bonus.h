@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:07:21 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/13 22:13:45 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/18 18:20:12 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,6 @@
 
 void	ft_error(int num);
 char	*new_str(int len);
+void	ft_send_bits_no_conf(int s_pid, unsigned int num, int bits);
+
 #endif

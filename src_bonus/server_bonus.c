@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/14 11:40:57 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/18 18:42:09 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_client_pid(int sig)
 	bit++;
 	if (bit == 32)
 	{
-		// ft_printf("cantidad de bit de pid cliente ok\n");
 		tem = num;
 		num = 0;
 		bit = 0;
@@ -47,10 +46,8 @@ char	*ft_handler_size(int sig)
 	if (sig == SIGUSR1)
 		num |= (1u << bit);
 	bit++;
-	// ft_printf("bit de len = %d\n", bit);
 	if (bit == 32)
 	{
-		// ft_printf("cantidad de bit de len cliente ok\n");
 		str = new_str(num);
 		g_state = 2;
 		bit = 0;
@@ -69,14 +66,12 @@ char	*ft_handler_char(int sig, char *str)
 	if (sig == SIGUSR1)
 		c |= (0x01 << bit);
 	bit++;
-	if (sig == 3)
-		c = '\0';
-	if (bit == 8 || sig == 3)
+	if (bit == 8)
 	{
 		str[i++] = c;
-		if (c == '\0')
+		if (c == '\0' || c == 255)
 		{
-			if (sig != 3)
+			if (c != 255)
 				ft_printf("%s\n", str);
 			free(str);
 			str = NULL;
@@ -93,33 +88,34 @@ void	ft_handler(int sig)
 {
 	static char			*str;
 	static unsigned int	c_pid;
+	int					pid;
 
 	if (g_state == 0)
 		c_pid = ft_client_pid(sig);
 	else if (g_state == 1)
 	{
 		str = ft_handler_size(sig);
-		usleep(100);
-		if (c_pid)
-			kill(c_pid, SIGUSR1);
+		kill(c_pid, SIGUSR1);
 	}
 	else if (g_state == 2)
 	{
 		str = ft_handler_char(sig, str);
-		usleep(100);
-		if (c_pid)
-			kill(c_pid, SIGUSR1);
-		if (sig == 3 || g_state == 0)
+		if (g_state == 0)
+		{
+			pid = getpid();
+			ft_printf(BLUE "%s" CYAN "%s" RESET "%d\n", "PID", " -> ", pid);
+			kill(c_pid, SIGUSR2);
 			c_pid = 0;
+		}
+		else
+			kill(c_pid, SIGUSR1);
 	}
 }
 
 int	main(int ac, char **av)
 {
 	int	pid;
-	int	time_whait;
 
-	time_whait = 0;
 	if (ac != 1 && av)
 		ft_error(1);
 	pid = getpid();
@@ -127,16 +123,6 @@ int	main(int ac, char **av)
 	signal(SIGUSR1, ft_handler);
 	signal(SIGUSR2, ft_handler);
 	while (1)
-	{
-		time_whait = 0;
-		usleep(300);
-		while (g_state == 2)
-		{
-			usleep(100);
-			time_whait += 100;
-			if (time_whait >= 2000000)
-				ft_handler(3);
-		}
-	}
+		pause();
 	return (0);
 }
