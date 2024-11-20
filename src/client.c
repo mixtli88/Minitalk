@@ -6,127 +6,246 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/18 20:36:41 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/19 21:42:48 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-// *** ENGLISH ***
-// Global variable to track received signals
-// *** ESPAÑOL ***
-// Variable global para rastrear señales recibidas
-// *** FRANÇAIS ***
-// Variable globale pour suivre les signaux reçus
-static int g_received = 0;
+// // *** ENGLISH ***
+// // Global variable to track received signals
+// // *** ESPAÑOL ***
+// // Variable global para rastrear señales recibidas
+// // *** FRANÇAIS ***
+// // Variable globale pour suivre les signaux reçus
+// static int g_received = 0;
 
-// *** ENGLISH ***
-// Signal handler for client-side communication acknowledgment
-// *** ESPAÑOL ***
-// Manejador de señales para reconocimiento de comunicación del cliente
-// *** FRANÇAIS ***
-// Gestionnaire de signaux pour l'accusé de réception côté client
-void confirm_handle(int sig)
+// // *** ENGLISH ***
+// // Signal handler for client-side communication acknowledgment
+// // *** ESPAÑOL ***
+// // Manejador de señales para reconocimiento de comunicación del cliente
+// // *** FRANÇAIS ***
+// // Gestionnaire de signaux pour l'accusé de réception côté client
+// void confirm_handle(int sig)
+// {
+//     if (sig == SIGUSR1)
+//         g_received = 1;  // Acknowledgment received
+//     else if (sig == SIGUSR2)
+//         g_received = 3;  // Communication error or termination signal
+// }
+
+// // *** ENGLISH ***
+// // Sends `bits` number of bits of the number `num` to the server
+// // *** ESPAÑOL ***
+// // Envía `bits` bits del número `num` al servidor
+// // *** FRANÇAIS ***
+// // Envoie `bits` bits du nombre `num` au serveur
+// void ft_send_bits(int s_pid, unsigned int num, int bits)
+// {
+//     int i = 0;
+//     int time_whait = 0;
+
+//     while (i < bits)
+//     {
+//         if (g_received == 3) // Error or disconnection signal
+//             break;
+//         g_received = 0;  // Reset acknowledgment
+//         if ((num & (1 << i)))
+//             kill(s_pid, SIGUSR1); // Send a 1 bit
+//         else
+//             kill(s_pid, SIGUSR2); // Send a 0 bit
+//         while (!g_received) // Wait for acknowledgment
+//         {
+//             usleep(1000);
+//             time_whait += 100;
+//             if (time_whait >= 500000) // Timeout (500ms)
+//                 ft_error(2);
+//         }
+//         i++;
+//     }
+// }
+
+// // *** ENGLISH ***
+// // Sends a string `str` to the server
+// // *** ESPAÑOL ***
+// // Envía una cadena `str` al servidor
+// // *** FRANÇAIS ***
+// // Envoie une chaîne `str` au serveur
+// void ft_send_str(int s_pid, char *str, int len)
+// {
+//     int i = 0;
+
+//     while (i < len)
+//     {
+//         ft_send_bits(s_pid, str[i], 8); // Send each character (8 bits)
+//         i++;
+//     }
+//     ft_send_bits(s_pid, '\0', 8); // Send null terminator
+// }
+
+// // *** ENGLISH ***
+// // Handles Ctrl+C to send termination signal to server
+// // *** ESPAÑOL ***
+// // Maneja Ctrl+C para enviar una señal de terminación al servidor
+// // *** FRANÇAIS ***
+// // Gère Ctrl+C pour envoyer un signal de terminaison au serveur
+// void handle_sigint(int sig)
+// {
+//     static int s_pid;
+
+//     if (sig == g_received)
+//         s_pid = sig; // Save the server PID
+//     if (sig == SIGINT)
+//     {
+//         ft_send_bits(s_pid, 65535, 32); // Send disconnection signal (14 bits of 1)
+//         ft_error(2);
+//         exit(1);
+//     }
+// }
+
+// // *** ENGLISH ***
+// // Main function to send a message from the client to the server
+// // *** ESPAÑOL ***
+// // Función principal para enviar un mensaje del cliente al servidor
+// // *** FRANÇAIS ***
+// // Fonction principale pour envoyer un message du client au serveur
+// int main(int ac, char **av)
+// {
+//     int server_pid;
+//     int len;
+//     int client_pid;
+
+//     if (ac != 3)
+//         ft_error(3); // Invalid arguments
+//     server_pid = ft_atoi(av[1]); // Get server PID
+//     client_pid = getpid();       // Get client PID
+//     len = ft_strlen(av[2]);      // Get message length
+//     g_received = server_pid;     // Save server PID temporarily
+//     handle_sigint(server_pid);
+//     g_received = 0;
+//     signal(SIGUSR1, confirm_handle); // Set signal handlers
+//     signal(SIGUSR2, confirm_handle);
+//     signal(SIGINT, handle_sigint);
+//     ft_send_bits_no_conf(server_pid, client_pid, 32); // Send client PID
+//     ft_send_bits(server_pid, len, 32);               // Send message length
+//     ft_send_str(server_pid, av[2], len);             // Send message content
+//     return (0);
+// }
+
+
+
+#include "../inc/minitalk.h"
+
+static int	g_received = 0;
+
+void	confirm_handle(int sig)
 {
-    if (sig == SIGUSR1)
-        g_received = 1;  // Acknowledgment received
-    else if (sig == SIGUSR2)
-        g_received = 3;  // Communication error or termination signal
+	if (sig == SIGUSR1)
+		g_received = 1;
+	else if (sig == SIGUSR2)
+		g_received = 3;
 }
 
-// *** ENGLISH ***
-// Sends `bits` number of bits of the number `num` to the server
-// *** ESPAÑOL ***
-// Envía `bits` bits del número `num` al servidor
-// *** FRANÇAIS ***
-// Envoie `bits` bits du nombre `num` au serveur
-void ft_send_bits(int s_pid, unsigned int num, int bits)
-{
-    int i = 0;
-    int time_whait = 0;
 
-    while (i < bits)
-    {
-        if (g_received == 3) // Error or disconnection signal
-            break;
-        g_received = 0;  // Reset acknowledgment
-        if ((num & (1 << i)))
-            kill(s_pid, SIGUSR1); // Send a 1 bit
-        else
-            kill(s_pid, SIGUSR2); // Send a 0 bit
-        while (!g_received) // Wait for acknowledgment
-        {
-            usleep(1000);
-            time_whait += 100;
-            if (time_whait >= 500000) // Timeout (500ms)
-                ft_error(2);
-        }
-        i++;
-    }
+void	ft_send_bits(int s_pid, unsigned long num, int bits)
+{
+	int	i;
+	int	time_whait;
+
+	i = 0;
+	time_whait = 0;
+	printf("len %lu\n", num);
+	while (i < bits)
+	{
+		printf("i fuera del singt %d\n",i);
+		if (g_received == 3)
+			break ;
+		g_received = 0;
+		if ((num & (1 << i)))
+			kill(s_pid, SIGUSR1);
+		else
+			kill(s_pid, SIGUSR2);
+		while (!g_received)
+		{
+			
+			usleep(1000);
+			time_whait += 100;
+			if (time_whait >= 500000)
+				ft_error(2);
+		}
+		i++;
+	}
 }
 
-// *** ENGLISH ***
-// Sends a string `str` to the server
-// *** ESPAÑOL ***
-// Envía una cadena `str` al servidor
-// *** FRANÇAIS ***
-// Envoie une chaîne `str` au serveur
-void ft_send_str(int s_pid, char *str, int len)
+void	ft_send_str(int s_pid, char *str, int len)
 {
-    int i = 0;
+	int	i;
 
-    while (i < len)
-    {
-        ft_send_bits(s_pid, str[i], 8); // Send each character (8 bits)
-        i++;
-    }
-    ft_send_bits(s_pid, '\0', 8); // Send null terminator
+	i = 0;
+	while (i < len)
+	{
+		ft_send_bits(s_pid, str[i], 8);
+		i++;
+	}
+	ft_send_bits(s_pid, '\0', 8);
 }
 
-// *** ENGLISH ***
-// Handles Ctrl+C to send termination signal to server
-// *** ESPAÑOL ***
-// Maneja Ctrl+C para enviar una señal de terminación al servidor
-// *** FRANÇAIS ***
-// Gère Ctrl+C pour envoyer un signal de terminaison au serveur
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
-    static int s_pid;
+	static int	s_pid;
+	// static int i;
 
-    if (sig == g_received)
-        s_pid = sig; // Save the server PID
-    if (sig == SIGINT)
-    {
-        ft_send_bits(s_pid, 65535, 32); // Send disconnection signal (14 bits of 1)
-        ft_error(2);
-        exit(1);
-    }
+	(void)sig;
+	if (sig == g_received)
+		s_pid = sig;
+	if (sig == SIGINT)
+	{
+		if(g_received == 4)
+		{
+			ft_send_bits_no_conf(s_pid, getpid(), 32);
+			ft_send_bits(s_pid, 2, 32);
+		}
+		// g_received = 0;
+		ft_send_bits(s_pid,4294967295,32);
+		if(g_received != 3)
+			ft_send_bits(s_pid,255,32);
+		// while (i < 47)
+		// {
+		// 	if (g_received == 3)
+		// 		break ;
+		// 	g_received = 0;
+		// 	kill(s_pid, SIGUSR1);
+		// 	while (!g_received)
+		// 		usleep(1000);
+		// 	i++;
+		// }
+		ft_error(2);
+		exit(1);
+	}
 }
 
-// *** ENGLISH ***
-// Main function to send a message from the client to the server
-// *** ESPAÑOL ***
-// Función principal para enviar un mensaje del cliente al servidor
-// *** FRANÇAIS ***
-// Fonction principale pour envoyer un message du client au serveur
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-    int server_pid;
-    int len;
-    int client_pid;
+	int	server_pid;
+	int	len;
+	int	client_pid;
 
-    if (ac != 3)
-        ft_error(3); // Invalid arguments
-    server_pid = ft_atoi(av[1]); // Get server PID
-    client_pid = getpid();       // Get client PID
-    len = ft_strlen(av[2]);      // Get message length
-    g_received = server_pid;     // Save server PID temporarily
-    handle_sigint(server_pid);
-    g_received = 0;
-    signal(SIGUSR1, confirm_handle); // Set signal handlers
-    signal(SIGUSR2, confirm_handle);
-    signal(SIGINT, handle_sigint);
-    ft_send_bits_no_conf(server_pid, client_pid, 32); // Send client PID
-    ft_send_bits(server_pid, len, 32);               // Send message length
-    ft_send_str(server_pid, av[2], len);             // Send message content
-    return (0);
+	len = 0;
+	if (ac != 3)
+		ft_error(3);
+	server_pid = ft_atoi(av[1]);
+	client_pid = getpid();
+	printf("pid c   %d\n", client_pid);
+	len = ft_strlen(av[2]);
+	printf("len main %d\n", len);
+	g_received = server_pid;
+	handle_sigint(server_pid);
+	g_received = 4;
+	signal(SIGUSR1, confirm_handle);
+	signal(SIGUSR2, confirm_handle);
+	signal(SIGINT, handle_sigint);
+	ft_send_bits_no_conf(server_pid, client_pid, 32);
+	g_received = 0;
+	ft_send_bits(server_pid, len, 32);
+	ft_send_str(server_pid, av[2], len);
+	return (0);
 }
