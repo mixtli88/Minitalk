@@ -6,7 +6,7 @@
 #    By: mabril <mabril@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/01 13:34:23 by mabril            #+#    #+#              #
-#    Updated: 2024/11/13 21:35:59 by mabril           ###   ########.fr        #
+#    Updated: 2024/11/20 09:53:54 by mabril           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,11 +72,11 @@ libft:
 	@make -C $(LIBFT_DIR)
 	@make -C $(LIB_PRINT)
 	
-client: $(OBJ_C)
+client: $(OBJ_C) $(OBJ_U)
 	@$(CC) $(CFLAGS) $(OBJ_U) $(OBJ_C) -o $@ -L$(LIBFT_DIR) -lft -L$(LIB_PRINT) -lftprintf
 	@echo "✅${GREEN} ${NAME_CLIENT} successfully created. 🌐${RESET}"
 
-server: $(OBJ_S)
+server: $(OBJ_S) $(OBJ_U)
 	@$(CC) $(CFLAGS) $(OBJ_U) $(OBJ_S) -o $@ -L$(LIBFT_DIR) -lft -L$(LIB_PRINT) -lftprintf
 	@echo "✅${GREEN} ${NAME_SERVER} Server successfully created. 🌐${RESET}\n"
 

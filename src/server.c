@@ -6,7 +6,7 @@
 /*   By: mabril <mabril@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 14:13:08 by mabril            #+#    #+#             */
-/*   Updated: 2024/11/19 21:42:30 by mabril           ###   ########.fr       */
+/*   Updated: 2024/11/20 13:29:36 by mabril           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,6 @@
 //     return (0);
 // }
 
-
 #include "../inc/minitalk.h"
 
 static int	g_state = 0;
@@ -175,17 +174,16 @@ int	ft_client_pid(int sig)
 	if (sig == SIGUSR1)
 		num |= (1u << bit);
 	bit++;
-	printf("pid  bit  %d\n", bit);
 	if (bit == 32)
 	{
-		printf("pid client bit  %d\n", num);
 		tem = num;
 		num = 0;
 		bit = 0;
 		g_state = 1;
 		return (tem);
 	}
-	usleep(100); return (num);
+	usleep(100);
+	return (num);
 }
 
 char	*ft_handler_len(int sig)
@@ -198,7 +196,6 @@ char	*ft_handler_len(int sig)
 	if (sig == SIGUSR1)
 		num |= (1u << bit);
 	bit++;
-	printf("len bit %d\n", bit);
 	if (bit >= 32)
 	{
 		str = new_str(num);
@@ -219,10 +216,8 @@ char	*ft_handler_char(int sig, char *str)
 	if (sig == SIGUSR1)
 		c |= (0x01 << bit);
 	bit++;
-	printf("sig %d\n", sig);
 	if (bit == 8)
 	{
-		printf("c %c\n", c);
 		str[i++] = c;
 		if (c == '\0' || c == 255)
 		{
@@ -230,11 +225,8 @@ char	*ft_handler_char(int sig, char *str)
 				ft_printf("%s\n", str);
 			free(str);
 			str = NULL;
-			printf("str reset %s\n", str);
 			g_state = 0;
-			printf("reset g_ %d\n", g_state);
 			i = 0;
-			printf("reset i %d\n", i);
 		}
 		bit = 0;
 		c = 0;
@@ -248,6 +240,7 @@ void	ft_handler(int sig)
 	static unsigned int	c_pid;
 	int					pid;
 
+	pid = getpid();
 	if (g_state == 0)
 		c_pid = ft_client_pid(sig);
 	else if (g_state == 1)
@@ -260,15 +253,20 @@ void	ft_handler(int sig)
 		str = ft_handler_char(sig, str);
 		if (g_state == 0)
 		{
-			pid = getpid();
-			ft_printf(BLUE "%s" CYAN "%s" RESET "%d\n", "PID", " -> ", pid);
 			kill(c_pid, SIGUSR2);
 			c_pid = 0;
+			ft_printf(BLUE "%s" CYAN "%s" RESET "%d\n", "PID", " -> ", pid);
 		}
 		else
 			kill(c_pid, SIGUSR1);
 	}
 }
+// void ft_exit(sig)
+// {
+// 	(void)sig;
+// 	if (sig == SIGTERM)
+// 		g_state = 5;
+// }
 
 int	main(int ac, char **av)
 {
@@ -280,7 +278,9 @@ int	main(int ac, char **av)
 	ft_printf(BLUE "%s" CYAN "%s" RESET "%d\n", "PID", " -> ", pid);
 	signal(SIGUSR1, ft_handler);
 	signal(SIGUSR2, ft_handler);
-	while (1)
+	while (g_state != 5)
 		pause();
 	return (0);
 }
+
+	// signal(SIGTERM, ft_exit);
